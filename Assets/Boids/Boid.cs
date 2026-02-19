@@ -17,6 +17,8 @@ public class Boid : MonoBehaviour
     public float alignmentWeight;
     public float cohessionWeight;
 
+    public bool isActive = false;
+
     private void Start()
     {
         GameObject[] boids = GameObject.FindGameObjectsWithTag("Boid");
@@ -32,18 +34,21 @@ public class Boid : MonoBehaviour
 
     private void Update()
     {
-        Vector3 acceleration = Vector3.zero;
+        if (isActive)
+        {
+            Vector3 acceleration = Vector3.zero;
 
-        acceleration += CalculateSeparation(Neighbors) * separationWeight;
-        acceleration += CalculateAlignment(Neighbors) * alignmentWeight;
-        acceleration += CalculateCoheion(Neighbors) * cohessionWeight;
-        acceleration += StayOnScreen() * screenEdgeWeight;
+            acceleration += CalculateSeparation(Neighbors) * separationWeight;
+            acceleration += CalculateAlignment(Neighbors) * alignmentWeight;
+            acceleration += CalculateCoheion(Neighbors) * cohessionWeight;
+            acceleration += StayOnScreen() * screenEdgeWeight;
 
-        velocity += acceleration * Time.deltaTime;
-        velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            velocity += acceleration * Time.deltaTime;
+            velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
 
-        transform.position += velocity * Time.deltaTime;
-        transform.rotation = Quaternion.LookRotation(velocity.normalized);
+            transform.position += velocity * Time.deltaTime;
+            transform.rotation = Quaternion.LookRotation(velocity.normalized);
+        }
     }
 
     private Vector3 CalculateSeparation(List<Boid> neighbors)
@@ -110,7 +115,6 @@ public class Boid : MonoBehaviour
         force.z += 1 / (screenPosition.y - screenSize.y);
 
         // If position x/y goes closer to screen 0, 0
-
         force.x += 1 / (screenPosition.x);
         force.z += 1 / (screenPosition.y);
 

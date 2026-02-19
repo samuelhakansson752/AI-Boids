@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Boid
   screenPosition: {x: 0, y: 0, z: 0}
   screenSize: {x: 0, y: 0}
-  velocity: {x: 8.06, y: 0, z: 10.94}
+  velocity: {x: 8.06, y: 0.81, z: 6.13}
   maxSpeed: 0
   Neighbors: []
   screenEdgeWeight: 0

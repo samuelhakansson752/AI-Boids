@@ -15,6 +15,8 @@ public class ControllScript : MonoBehaviour
     public float alignmentWeight;
     public float cohessionWeight;
 
+    public bool initialized;
+
     private void Start()
     {
         GameObject[] boids = GameObject.FindGameObjectsWithTag("Boid");
@@ -38,6 +40,15 @@ public class ControllScript : MonoBehaviour
             boid.separationWeight = separationWeight;
             boid.alignmentWeight = alignmentWeight;
             boid.cohessionWeight = cohessionWeight;
+        }
+
+        if (!initialized)
+        {
+            initialized = !initialized;
+            foreach (Boid boid in AllBoids)
+            {
+                boid.isActive = true;
+            }
         }
     }
 }
