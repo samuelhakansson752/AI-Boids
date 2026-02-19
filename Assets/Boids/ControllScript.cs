@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class ControllScript : MonoBehaviour
 {
+    public Camera screen;
+
     public List<Boid> AllBoids;
 
     public float maxSpeed;
 
+    public float screenEdgeWeight;
     public float separationRadius;
     public float separationWeight;
     public float alignmentWeight;
@@ -26,7 +29,11 @@ public class ControllScript : MonoBehaviour
     {
         foreach (Boid boid in AllBoids)
         {
+            boid.screenSize.x = screen.pixelWidth;
+            boid.screenSize.y = screen.pixelHeight;
+            boid.screenPosition = screen.WorldToScreenPoint(boid.transform.position);
             boid.maxSpeed = maxSpeed;
+            boid.screenEdgeWeight = screenEdgeWeight;
             boid.separationRadius = separationRadius;
             boid.separationWeight = separationWeight;
             boid.alignmentWeight = alignmentWeight;

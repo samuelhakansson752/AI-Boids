@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
+    public Vector3 screenPosition;
+    public Vector2 screenSize;
     public Vector3 velocity;
     public float maxSpeed;
     public List<Boid> Neighbors;
 
+    public float screenEdgeWeight;
     public float separationRadius;
     public float separationWeight;
     public float alignmentWeight;
@@ -34,6 +37,7 @@ public class Boid : MonoBehaviour
         acceleration += CalculateSeparation(Neighbors) * separationWeight;
         acceleration += CalculateAlignment(Neighbors) * alignmentWeight;
         acceleration += CalculateCoheion(Neighbors) * cohessionWeight;
+        acceleration += StayOnScreen() * screenEdgeWeight;
 
         velocity += acceleration * Time.deltaTime;
         velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
@@ -95,5 +99,21 @@ public class Boid : MonoBehaviour
         center /= neighbors.Count;
 
         return center - transform.position;
+    }
+
+    private Vector3 StayOnScreen()
+    {
+        Vector3 force = Vector3.zero;
+
+        // More Force if postion x/y goes closet to screen max x/y
+        force.x += 1 / (screenPosition.x - screenSize.x);
+        force.z += 1 / (screenPosition.y - screenSize.y);
+
+        // If position x/y goes closer to screen 0, 0
+
+        force.x += 1 / (screenPosition.x);
+        force.z += 1 / (screenPosition.y);
+
+        return force;
     }
 }

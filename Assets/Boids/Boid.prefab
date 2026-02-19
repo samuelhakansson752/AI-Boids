@@ -124,9 +124,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1667ea2dadeab40967b29f82ee1f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boid
-  velocity: {x: 0, y: 0, z: 1.49}
+  screenPosition: {x: 0, y: 0, z: 0}
+  screenSize: {x: 0, y: 0}
+  velocity: {x: 8.06, y: 0, z: 10.94}
   maxSpeed: 0
   Neighbors: []
+  screenEdgeWeight: 0
   separationRadius: 0
   separationWeight: 0
   alignmentWeight: 0
