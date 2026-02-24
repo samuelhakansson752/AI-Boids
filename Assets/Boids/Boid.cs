@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using TreeEditor;
+using Unity.VisualScripting;
 using UnityEditor.TerrainTools;
 using UnityEngine;
 
@@ -8,20 +10,25 @@ public class Boid : MonoBehaviour
     public Vector3 screenPosition;
     public Vector2 screenSize;
     public Vector3 velocity;
+    public float MinMaxY;
     public float maxSpeed;
     public List<Boid> Neighbors;
+    public List<Predator> Predators;
 
     public float screenEdgeWeight;
     public float separationRadius;
     public float separationWeight;
     public float alignmentWeight;
     public float cohessionWeight;
+    public float predatorAvoidance;
+    public float predDistanceWeight;
 
     public bool isActive = false;
 
     private void Start()
     {
         GameObject[] boids = GameObject.FindGameObjectsWithTag("Boid");
+        GameObject[] preds = GameObject.FindGameObjectsWithTag("Predator");
 
         foreach (GameObject boid in boids)
         {
@@ -29,6 +36,11 @@ public class Boid : MonoBehaviour
             {
                 Neighbors.Add(boid.GetComponent<Boid>());
             }
+        }
+
+        foreach (GameObject predator in preds)
+        {
+            Predators.Add(predator.GetComponent<Predator>());
         }
     }
 
@@ -42,6 +54,7 @@ public class Boid : MonoBehaviour
             acceleration += CalculateAlignment(Neighbors) * alignmentWeight;
             acceleration += CalculateCoheion(Neighbors) * cohessionWeight;
             acceleration += StayOnScreen() * screenEdgeWeight;
+            acceleration += AvoidPredator() * predatorAvoidance;
 
             velocity += acceleration * Time.deltaTime;
             velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
@@ -110,7 +123,7 @@ public class Boid : MonoBehaviour
     {
         Vector3 force = Vector3.zero;
 
-        // More Force if postion x/y goes closet to screen max x/y
+        // More Force if postion x/y goes closer to screen max x/y
         force.x += 1 / (screenPosition.x - screenSize.x);
         force.z += 1 / (screenPosition.y - screenSize.y);
 
@@ -118,6 +131,24 @@ public class Boid : MonoBehaviour
         force.x += 1 / (screenPosition.x);
         force.z += 1 / (screenPosition.y);
 
+        //-y force if position.y is high and opposite
+        force.y += 1 / (MinMaxY - -transform.position.y);
+        force.y += 1 / (-MinMaxY - -transform.position.y);
+
         return force;
+    }
+
+    private Vector3 AvoidPredator()
+    {
+        Vector3 avoidance = Vector3.zero;
+
+        foreach (Predator pred in Predators)
+        {
+            float dist = Vector3.Distance(pred.transform.position, transform.position);
+
+            avoidance += pred.velocity * (predDistanceWeight / dist);
+        }
+
+        return avoidance;
     }
 }

@@ -44,9 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4684e266880b2cb4a9778ad0f953d72f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControllScript
+  screen: {fileID: 0}
   AllBoids: []
-  maxSpeed: 0.63
+  Predators: []
+  maxSpeed: 4.09
+  MinMaxY: 15
+  screenEdgeWeight: 273.6
   separationRadius: 0.76
-  separationWeight: 0
-  alignmentWeight: 0
-  cohessionWeight: 0
+  separationWeight: 0.13
+  alignmentWeight: 0.15
+  cohessionWeight: 0.12
+  predatorAvoidance: 1.22
+  initialized: 0
